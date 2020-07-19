@@ -90,6 +90,7 @@ object DauApp {
       println("过滤前：" + beforeFilteredlist.size)
       val jsonObjList = new ListBuffer[JSONObject]
 
+      //如果是集群需要使用JedisCluster
       val jedis: Jedis = RedisUtil.getJedisClient
       for (jsonObj <- beforeFilteredlist) {
         val mid: String = jsonObj.getJSONObject("common").getString("mid")
