@@ -2,11 +2,11 @@ package com.tom.gmall.logger.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
+@Slf4j
 public class LoggerController {
 
     @Autowired
@@ -35,18 +36,19 @@ public class LoggerController {
 
         JSONObject jsonObject = JSON.parseObject(json);
 
+        //发送到kafka
         if(jsonObject.getString("start")!=null && jsonObject.getString("start").length()>0) {
             kafkaTemplate.send("GMALL_START", json);
         }else{
             kafkaTemplate.send("GMALL_EVENT",json);
         }
 
-
-
-
+        //落盘写入到文件
+        log.info(json);
 
         return "success";
     }
+
 
 
 }
